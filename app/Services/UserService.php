@@ -17,7 +17,7 @@ class UserService implements UserInterface
 
     public function index() : LengthAwarePaginator
     {
-        return User::paginate(config('util.paginate'));
+        return User::with(['roles','permissions'])->paginate(config('util.paginate'));
     }
 
     public function create(array $data): User
@@ -57,6 +57,43 @@ class UserService implements UserInterface
 
     }
 
+    public function show(int $user_id): User
+    {
+        $user = User::find($user_id);
+        if(!$user) {
+            throw new CustomException("Unknown User", Response::HTTP_BAD_REQUEST);
+        }
+
+        return $user;
+    }
+
+    public function update(array $data, int $user_id): User
+    {
+        $user = User::find($user_id);
+        if(!$user) {
+            throw new CustomException("Unknown User", Response::HTTP_BAD_REQUEST);
+        }
+
+        $user->first_name = $data['first_name'] ?? $user->first_name;
+        $user->last_name = $data['last_name'] ?? $user->last_name;
+        //$user->username = $data['username'] ?? $user->username;
+        //$user->mobile_number = $data['mobile_number'] ?? $user->mobile_number;
+        $user->img_url = $data['img_url'] ?? $user->img_url;
+        $user->save();
+
+        $user->roles()->detach();
+        $user->assignRole($data['role']);
+
+        $user->syncPermissions();
+        $permissions =  data_get($data,'permissions');
+        if(!is_null($permissions)) {
+
+            $user->givePermissionTo(array_values($permissions));
+        }
+
+        return $user;
+    }
+
     public function delete(int $user_id): bool
     {
         $user = User::find($user_id);
@@ -67,4 +104,6 @@ class UserService implements UserInterface
         return $user->delete();
 
     }
+
+
 }

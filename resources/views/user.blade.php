@@ -60,7 +60,7 @@
                                                 <td>{{$user->created_at->format('d M, Y')}}</td>
                                                 <td> {{$user->roles->implode('name',' and ')}} </td>
                                                 <td>
-                                                    <a href="#" class="btn"><em class="icon ni ni-edit-alt"></em> </a>
+                                                    <a href="javascript:void(0)" onclick="editUser('{{$user->id}}')" class="btn"><em class="icon ni ni-edit-alt"></em> </a>
                                                     <a href="javascript:void(0)" onclick="confirmDeleteUser('{{$user->id}}')" class="btn"><em class="icon ni ni-trash"></em> </a>
 
                                                 </td>
@@ -214,6 +214,14 @@
         </div>
     </div>
 
+
+    <div class="modal fade" id="editUserModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content" id="edit_content">
+            </div>
+        </div>
+    </div>
+
     <div id="body-overlay"><div>
             <img src="{{url('loader.gif')}}" width="64px" height="64px" />
         </div></div>
@@ -313,7 +321,6 @@
                     if(resp.status == "success")
                     {
                         bootbox.alert(resp.message)
-                        $('#addUserModal').modal('hide')
                         $("#row_"+user_id).remove()
 
                     }
@@ -340,6 +347,91 @@
                 }
             });
 
+        }
+        function editUser(user_id)
+        {
+
+            $.ajax( "{{ url('api/v1/user') }}/"+user_id, {
+                type:'GET',
+                dataType: "json",
+                data:{"_token": "{{ csrf_token() }}"},
+                beforeSend: function(){$("#body-overlay").show();},
+                success:function(resp){
+                    if(resp.status == "success")
+                    {
+                        $("#edit_content").html(resp.data)
+                        $('#editUserModal').modal('show')
+
+                    }
+                    else
+                    {
+                        bootbox.alert(resp.message)
+                    }
+
+                    setInterval(function() {$("#body-overlay").hide(); },500);
+                },
+                error: function (data) {
+
+                    if (data.status ==422)
+                    {
+                        var errorstr ="";
+                        $.each(data.responseJSON.errors, function (key, item) {
+                            errorstr += item+"<br />"
+                        });
+                        bootbox.alert(errorstr)
+                    } else {
+                        bootbox.alert(data.responseJSON.message)
+                    }
+                    setInterval(function() {$("#body-overlay").hide(); },500);
+                }
+            });
+
+        }
+
+        function updateUser(user_id)
+        {
+            var addUserForm = $("#editUserForm");
+            var formData = addUserForm.serializeArray();
+
+            $.ajax( "{{ url('api/v1/user') }}/"+user_id, {
+                type:'PATCH',
+                dataType: "json",
+                data:formData,
+                beforeSend: function(){$("#body-overlay").show();},
+                success:function(resp){
+                    if(resp.status == "success")
+                    {
+
+                        bootbox.alert(resp.message)
+                        $('#addUserModal').modal('hide')
+                        /*addUserForm.closest('form').find("input[type=text], input[type=email], textarea").val("");
+                        addUserForm.closest('form').find("input[type=checkbox]").prop('checked',false);*/
+                        location.reload();
+
+                    }
+                    else
+                    {
+                        bootbox.alert(resp.message)
+                    }
+
+                    setInterval(function() {$("#body-overlay").hide(); },500);
+                },
+                error: function (data) {
+
+                    if (data.status ==422)
+                    {
+                        var errorstr ="";
+                        $.each(data.responseJSON.errors, function (key, item) {
+                            errorstr += item+"<br />"
+                        });
+                        //console.log(data.responseJSON.message)
+                        bootbox.alert(errorstr)
+                    } else {
+                        bootbox.alert(data.responseJSON.msg)
+                    }
+                    setInterval(function() {$("#body-overlay").hide(); },500);
+                }
+            });
         }
     </script>
 @endsection

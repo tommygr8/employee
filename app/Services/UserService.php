@@ -56,4 +56,15 @@ class UserService implements UserInterface
         return $user;
 
     }
+
+    public function delete(int $user_id): bool
+    {
+        $user = User::find($user_id);
+        if(!$user) {
+            throw new CustomException("Unknown User", Response::HTTP_BAD_REQUEST);
+        }
+
+        return $user->delete();
+
+    }
 }

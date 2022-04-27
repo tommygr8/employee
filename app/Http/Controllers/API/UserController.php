@@ -31,4 +31,15 @@ class UserController extends Controller
             "status" => "success"
         ]);
     }
+
+    public function delete($user_id)
+    {
+        $response = $this->user->delete($user_id);
+        if(!$response) {
+            throw new CustomException("Could not delete user", Response::HTTP_BAD_REQUEST);
+        }
+
+        return Response::success("User has been deleted successfully", Response::HTTP_BAD_REQUEST);
+
+    }
 }

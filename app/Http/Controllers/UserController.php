@@ -21,4 +21,5 @@ class UserController extends Controller
         $users = $this->user->index();
         return view('user', compact('roles','users'));
     }
+
 }

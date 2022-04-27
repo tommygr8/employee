@@ -42,7 +42,7 @@
                                         <tbody>
 
                                         @foreach($users as $user)
-                                            <tr>
+                                            <tr id="row_{{$user->id}}">
                                                 <td scope="row">
 
                                                     <div class="user-card">
@@ -61,7 +61,7 @@
                                                 <td> {{$user->roles->implode('name',' and ')}} </td>
                                                 <td>
                                                     <a href="#" class="btn"><em class="icon ni ni-edit-alt"></em> </a>
-                                                    <a href="#" class="btn"><em class="icon ni ni-trash"></em> </a>
+                                                    <a href="javascript:void(0)" onclick="confirmDeleteUser('{{$user->id}}')" class="btn"><em class="icon ni ni-trash"></em> </a>
 
                                                 </td>
                                             </tr>
@@ -155,13 +155,13 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-control-wrap">
-                                    <input type="text" class="form-control" placeholder="Password *" id="password" name="password" required>
+                                    <input type="password" class="form-control" placeholder="Password *" id="password" name="password" required>
                                 </div>
                             </div>
 
                             <div class="col-md-4">
                                 <div class="form-control-wrap">
-                                    <input type="text" class="form-control" placeholder="Confirm Password *" id="password_confirmation" name="password_confirmation" required>
+                                    <input type="password" class="form-control" placeholder="Confirm Password *" id="password_confirmation" name="password_confirmation" required>
                                 </div>
                             </div>
                         </div>
@@ -225,6 +225,7 @@
 
 
 @section('jsasset')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js" integrity="sha512-RdSPYh1WA6BF0RhpisYJVYkOyTzK4HwofJ3Q7ivt/jkpW6Vc8AurL1R+4AUcvn9IwEKAPm/fk7qFZW3OuiUDeg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
 
         function showModal()
@@ -236,7 +237,7 @@
             var addUserForm = $("#addUserForm");
             var formData = addUserForm.serializeArray();
 
-            $.ajax( "{{ url('api/v1/add-user') }}", {
+            $.ajax( "{{ url('api/v1/user') }}", {
                 type:'POST',
                 dataType: "json",
                 data:formData,
@@ -245,7 +246,7 @@
                     if(resp.status == "success")
                     {
 
-                        alert(resp.message)
+                        bootbox.alert(resp.message)
                         $('#addUserModal').modal('hide')
                         /*addUserForm.closest('form').find("input[type=text], input[type=email], textarea").val("");
                         addUserForm.closest('form').find("input[type=checkbox]").prop('checked',false);*/
@@ -254,7 +255,7 @@
                     }
                     else
                     {
-                        alert(resp.message)
+                        bootbox.alert(resp.message)
                     }
 
                     setInterval(function() {$("#body-overlay").hide(); },500);
@@ -265,12 +266,75 @@
                     {
                         var errorstr ="";
                         $.each(data.responseJSON.errors, function (key, item) {
-                            errorstr += item+"\r\n"
+                            errorstr += item+"<br />"
                         });
                        //console.log(data.responseJSON.message)
-                        alert(errorstr)
+                        bootbox.alert(errorstr)
                     } else {
-                        alert(data.responseJSON.msg)
+                        bootbox.alert(data.responseJSON.msg)
+                    }
+                    setInterval(function() {$("#body-overlay").hide(); },500);
+                }
+            });
+
+        }
+
+
+        function confirmDeleteUser(user_id)
+        {
+            bootbox.confirm({
+                message: "Are you sure you want to delete this user?",
+                buttons: {
+                    confirm: {
+                        label: 'Yes',
+                        className: 'btn-success'
+                    },
+                    cancel: {
+                        label: 'No',
+                        className: 'btn-danger'
+                    }
+                },
+                callback: function (result) {
+                    if(result)
+                    {
+                        deleteUser(user_id);
+                    }
+                }
+            });
+        }
+        function deleteUser(user_id)
+        {
+            $.ajax( "{{ url('api/v1/user') }}/"+user_id, {
+                type:'DELETE',
+                dataType: "json",
+                data:{"_token": "{{ csrf_token() }}"},
+                beforeSend: function(){$("#body-overlay").show();},
+                success:function(resp){
+                    if(resp.status == "success")
+                    {
+                        bootbox.alert(resp.message)
+                        $('#addUserModal').modal('hide')
+                        $("#row_"+user_id).remove()
+
+                    }
+                    else
+                    {
+                        bootbox.alert(resp.message)
+                    }
+
+                    setInterval(function() {$("#body-overlay").hide(); },500);
+                },
+                error: function (data) {
+
+                    if (data.status ==422)
+                    {
+                        var errorstr ="";
+                        $.each(data.responseJSON.errors, function (key, item) {
+                            errorstr += item+"<br />"
+                        });
+                        bootbox.alert(errorstr)
+                    } else {
+                        bootbox.alert(data.responseJSON.message)
                     }
                     setInterval(function() {$("#body-overlay").hide(); },500);
                 }

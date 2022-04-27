@@ -19,5 +19,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::prefix('v1')->group(function (){
-    Route::post('add-user',[UserController::class,'add']);
+    Route::prefix('user')->group(function () {
+        Route::post('/',[UserController::class,'add']);
+        Route::delete('/{user_id}',[UserController::class,'delete']);
+    });
+
 });

@@ -72,7 +72,7 @@
     </div>
     <div class="nk-sidebar-main is-light">
         <div class="nk-sidebar-inner" data-simplebar>
-            <div class="nk-menu-content menu-active" data-content="navSearch">
+            <div class="nk-menu-content {{isset($menu) && $menu == 'search_menu' ? 'menu-active' :''}}" data-content="navSearch">
 
                 <ul class="nk-menu">
 
@@ -81,7 +81,7 @@
 
             </div>
 
-            <div class="nk-menu-content" data-content="navCalendar">
+            <div class="nk-menu-content {{isset($menu) && $menu == 'calendar_menu' ? 'menu-active' :''}}" data-content="navCalendar">
 
                 <ul class="nk-menu">
 
@@ -89,71 +89,71 @@
                 </ul><!-- .nk-menu -->
             </div>
 
-            <div class="nk-menu-content" data-content="navUsers">
+            <div class="nk-menu-content {{isset($menu) && $menu == 'user_menu' ? 'menu-active' :''}}" data-content="navUsers">
 
                 <ul class="nk-menu">
                     <li class="nk-menu-item">
-                        <a href="html/apps-inbox.html" class="nk-menu-link">
+                        <a href="#" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-header"></em></span>
                             <span class="nk-menu-text">Dashboard</span>
                         </a>
                     </li>
                     <li class="nk-menu-item">
-                        <a href="html/apps-messages.html" class="nk-menu-link">
+                        <a href="{{url('/')}}" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-users"></em></span>
                             <span class="nk-menu-text">Users</span>
                         </a>
                     </li>
                     <li class="nk-menu-item">
-                        <a href="html/apps-file-manager.html" class="nk-menu-link">
+                        <a href="#" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-folders"></em></span>
                             <span class="nk-menu-text">Departments</span>
                         </a>
                     </li>
 
                     <li class="nk-menu-item">
-                        <a href="html/apps-messages.html" class="nk-menu-link">
+                        <a href="#" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-users"></em></span>
                             <span class="nk-menu-text">Employee</span>
                         </a>
                     </li>
                     <li class="nk-menu-item">
-                        <a href="html/apps-chats.html" class="nk-menu-link">
+                        <a href="#" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-spark"></em></span>
                             <span class="nk-menu-text">Activities</span>
                         </a>
                     </li>
 
                     <li class="nk-menu-item">
-                        <a href="html/apps-chats.html" class="nk-menu-link">
+                        <a href="#" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-check-circle-cut"></em></span>
                             <span class="nk-menu-text">Holidays</span>
                         </a>
                     </li>
 
                     <li class="nk-menu-item">
-                        <a href="html/apps-chats.html" class="nk-menu-link">
+                        <a href="#" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-hot"></em></span>
                             <span class="nk-menu-text">Events</span>
                         </a>
                     </li>
 
                     <li class="nk-menu-item">
-                        <a href="html/apps-chats.html" class="nk-menu-link">
+                        <a href="#" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-cc-alt"></em></span>
                             <span class="nk-menu-text">Payroll</span>
                         </a>
                     </li>
 
                     <li class="nk-menu-item">
-                        <a href="html/apps-chats.html" class="nk-menu-link">
+                        <a href="#" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-user"></em></span>
                             <span class="nk-menu-text">Account</span>
                         </a>
                     </li>
 
                     <li class="nk-menu-item">
-                        <a href="html/apps-chats.html" class="nk-menu-link">
+                        <a href="#" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-alert-circle"></em></span>
                             <span class="nk-menu-text">Report</span>
                         </a>

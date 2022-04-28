@@ -19,7 +19,8 @@ class UserController extends Controller
     {
         $roles = Role::all();
         $users = $this->user->index();
-        return view('user', compact('roles','users'));
+        $menu = 'user_menu';
+        return view('user', compact('roles','users','menu'));
     }
 
 }

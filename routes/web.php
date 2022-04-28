@@ -17,3 +17,7 @@ use App\Http\Controllers\UserController;
 
 
 Route::get('/',[UserController::class,'index']);
+Route::get('/',[UserController::class,'index']);
+Route::prefix('users')->group(function () {
+    Route::get('/',[UserController::class,'index']);
+});
